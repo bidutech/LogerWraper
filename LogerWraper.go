@@ -99,7 +99,8 @@ func (l *LogerWraper) consoleBetter(s string) {
 			}
 		}
 		file = short
-		msg := fmt.Sprintf("%s:%s\t%s", file, strconv.Itoa(line), s)
+		//msg := fmt.Sprintf("%s:%s\t%s", file, strconv.Itoa(line), s)
+		msg := fmt.Sprintf("%s %s", strconv.Itoa(line), s)
 		log.Println(msg)
 	}
 }
