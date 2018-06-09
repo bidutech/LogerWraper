@@ -14,7 +14,7 @@
 <pre><code>
 
 需求：
-V2: V1版需要从json文件初始化，存在问题：应用有自己的配置文件，再加上log配置文件有些多于，最好是 应用自己的配配置文件包含log配置文件。
+V2: V1版需要从json文件初始化，存在问题：应用有自己的配置文件，再加上log配置文件有些多余，最好是 应用自己的配配置文件包含log配置文件。
 例如：
 type AppOpConfig struct {
 	Key      string `json:"key"`
