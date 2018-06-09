@@ -31,6 +31,10 @@ type LogConfig struct {
 	Type         int    `json:"type"`    // 1 dailylog   2 filelog
 }
 
+func (l *LogerWraper) InitLogFromLogConfig(logConf LogConfig) {
+	l.realnitLogFromLogcof(logConf)
+}
+
 func (l *LogerWraper) InitLog(logConfigName string) {
 	l.realnitLogFromconfigfile(logConfigName)
 }
@@ -120,6 +124,53 @@ func (l *LogerWraper) Error(v ...interface{}) {
 func (l *LogerWraper) Fatal(v ...interface{}) {
 	msg := l.callerInfo() + fmt.Sprintf("%v", v)
 	l.fatal(msg)
+}
+
+func (l *LogerWraper) realnitLogFromLogcof(LogConf LogConfig) {
+	l.initLoger()
+
+	//	var LogConf LogConfig
+	//	l.initLogConfig(logConfigName, &LogConf)
+	fmt.Println(LogConf)
+	level := LogConf.Level
+	if level < ALL {
+		level = ALL
+	} else if level > OFF {
+		level = OFF
+	}
+	var debug bool
+	if LogConf.Debug == 0 {
+		debug = false
+	} else {
+		debug = true
+	}
+
+	var console bool
+	if LogConf.ConsolePrint == 0 {
+		console = false
+	} else {
+		console = true
+	}
+
+	l.mkdir(LogConf.LogFilePath)
+	var daily bool
+	daily = false
+	if LogConf.Type == 1 {
+		daily = true
+		l.initRollingDaily(LogConf.LogFileName, LogConf.LogFilePath, debug, console, level)
+	} else if LogConf.Type == 2 {
+		l.initRollingFile(LogConf.LogFileName, LogConf.LogFilePath, debug, console, level,
+			LogConf.MaxNumber, LogConf.MaxSize, MB)
+	} else {
+		fmt.Println("ERR Log Type")
+	}
+
+	l.lcfg.logLevel = level
+	l.lcfg.dailyRolling = daily
+	l.lcfg.consoleAppender = console
+	l.lcfg.RollingFile = daily
+	l.dodebug = debug
+
 }
 
 func (l *LogerWraper) realnitLogFromconfigfile(logConfigName string) {

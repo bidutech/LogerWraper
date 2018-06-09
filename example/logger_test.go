@@ -20,6 +20,10 @@ func InitLog() {
 	logConfigFile := "./" + LogConfigFile
 	loger.InitLog(logConfigFile)
 	loger.Info("Loger ready")
+	
+
+}
+
 
 }
 

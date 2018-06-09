@@ -12,7 +12,47 @@
 ###4、example:
 * 配置文件方式（推荐）
 <pre><code>
-需要按照log.cfg模板进行配置
+
+需求：
+V2: V1版需要从json文件初始化，存在问题：应用有自己的配置文件，再加上log配置文件有些多于，最好是 应用自己的配配置文件包含log配置文件。
+例如：
+type AppOpConfig struct {
+	Key      string `json:"key"`
+	Url      string `json:"url"`
+	Arp     []Arp `json:"arp"`
+	LogPath  string `json:"logpath"`
+	LogLevel int    `json:"loglevel"`
+}
+应用初始化基本信息，LogerWraper.LogConfig  程序代码默认配置简化配置文件
+##新增从 LogerWraper.LogConfig 初始化
+	var logconf LogerWraper.LogConfig
+	logconf.ConsolePrint = 1
+	logconf.Debug = 1
+	logconf.Level = LogerWraper.LEVEL(2)
+	logconf.LogFileName = "test.log"
+	logconf.LogFilePath = "/tmp/log/"
+	logconf.MaxNumber = 10
+	logconf.MaxSize = 1024
+	logconf.Type = 1
+	loger.InitLogFromLogConfig(logconf)
+
+	PrintConf(selfconf)
+	loger.Info("init from LogerWraper.LogConfig ")
+	
+##或者应用配置包含log配置：
+type AppOpConfig struct {
+	Key      string `json:"key"`
+	Url      string `json:"url"`
+	Ares     []Ares `json:"ares"`
+	LogConf LogerWraper.LogConfig  `json:"logconf"`
+}
+var appConf AppOpConfig
+loger.InitLogFromLogConfig(appConf.Logconf)
+
+
+	
+	
+V1:需要按照log.cfg模板进行配置
 
 logpath  日志存储路径
 
